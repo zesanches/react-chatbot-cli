@@ -13,9 +13,9 @@ export const REGISTRY: Record<string, ComponentRegistry> = {
     name: 'openai',
     repo: 'react-chatbot-openai',
     branch: 'main',
-    path: 'src/components/Chatbot',
-    dependencies: ['react'],
-    envVars: ['REACT_APP_OPENAI_API_KEY'],
+    path: 'components/Chatbot.tsx',
+    dependencies: ['react', "openai", "react-markdown"],
+    envVars: ['VITE_OPENAI_API_KEY', 'REACT_APP_OPENAI_API_KEY'],
     description: 'Chatbot component with OpenAI integration',
   },
 };

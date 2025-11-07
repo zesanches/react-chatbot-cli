@@ -24,18 +24,13 @@ export async function fetchFromGitHub(
   const files: RemoteFile[] = [];
   const contents = await fetchJson(apiUrl);
 
-  if (!Array.isArray(contents)) {
-    throw new Error('Invalid response from GitHub API');
-  }
+  if (contents.type === 'file') {
+    const contentFile = await fetchFileContent(contents.download_url);
 
-  for (const item of contents) {
-    if (item.type === 'file') {
-      const content = await fetchFileContent(item.download_url);
-      files.push({
-        path: item.name,
-        content,
-      });
-    }
+    files.push({
+      path: contents.name,
+      content: contentFile,
+    });
   }
 
   return files;
