@@ -21,6 +21,8 @@ export async function fetchFromGitHub(
 ): Promise<RemoteFile[]> {
   const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${dirPath}?ref=${branch}`;
 
+  console.log(apiUrl)
+
   const files: RemoteFile[] = [];
   const contents = await fetchJson(apiUrl);
 
@@ -81,6 +83,7 @@ function httpsGet(url: string): Promise<string> {
 
 async function fetchJson(url: string): Promise<any> {
   const data = await httpsGet(url);
+
   return JSON.parse(data);
 }
 

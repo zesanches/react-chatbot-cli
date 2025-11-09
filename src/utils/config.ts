@@ -4,6 +4,8 @@ import * as path from 'path';
 export interface Config {
   componentsPath: string;
   typescript: boolean;
+  hooksPath: string;
+  providersPath: string;
 }
 
 export async function getConfig(): Promise<Config | null> {

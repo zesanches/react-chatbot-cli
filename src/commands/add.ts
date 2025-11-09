@@ -6,7 +6,7 @@ import { getConfig } from '../utils/config';
 import { getTemplate } from '../utils/templates';
 import { listAvailableComponents } from '../utils/registry';
 
-export async function add(component: string, options?: { owner?: string }) {
+export async function add(component: string) {
   const spinner = ora('Checking configuration...').start();
 
   try {
@@ -34,13 +34,23 @@ export async function add(component: string, options?: { owner?: string }) {
 
     const cwd = process.cwd();
     const componentsDir = path.join(cwd, config.componentsPath);
-
-    const template = await getTemplate(component, config.typescript, options?.owner);
+    const hooksDir = path.join(cwd, config.hooksPath);
+    const providersDir = path.join(cwd, config.providersPath);
+    const template = await getTemplate(component, config.typescript);
 
     spinner.text = `Installing ${component} component...`;
 
     for (const file of template.files) {
-      const filePath = path.join(componentsDir, file.path);
+      let filePath;
+
+      if (file.path.includes("Provider")) {
+        filePath = path.join(providersDir, file.path);
+      } else if (file.path.includes("use")) {
+        filePath = path.join(hooksDir, file.path);
+      } else {
+        filePath = path.join(componentsDir, file.path);
+      }
+
       await fs.ensureDir(path.dirname(filePath));
       await fs.writeFile(filePath, file.content);
     }

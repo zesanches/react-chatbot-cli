@@ -17,12 +17,10 @@ export interface Template {
  * Fetches a component template from external repository
  * @param component - Component name (e.g., 'openai')
  * @param typescript - Whether to use TypeScript
- * @param githubOwner - GitHub username/organization (defaults to env var or 'your-org')
  */
 export async function getTemplate(
   component: string,
   typescript: boolean,
-  githubOwner?: string
 ): Promise<Template> {
   const componentInfo = getComponentFromRegistry(component);
 
@@ -30,17 +28,34 @@ export async function getTemplate(
     throw new Error(`Component "${component}" not found in registry`);
   }
 
-  const owner = githubOwner || process.env.GITHUB_OWNER || 'your-github-username';
+  const owner = process.env.GITHUB_OWNER || 'zesanches';
 
   try {
-    const remoteFiles = await fetchFromGitHub(
+    const componentFiles = await fetchFromGitHub(
       owner,
       componentInfo.repo,
       componentInfo.branch,
       componentInfo.path
     );
 
-    const files: TemplateFile[] = remoteFiles.map((file) => {
+    const hookFiles = await fetchFromGitHub(
+      owner,
+      componentInfo.repo,
+      componentInfo.branch,
+      componentInfo.hookPath
+    )
+
+    const providerFiles = await fetchFromGitHub(
+      owner,
+      componentInfo.repo,
+      componentInfo.branch,
+      componentInfo.providerPath
+    )
+
+
+    const allRemoteFiles = [...componentFiles, ...hookFiles, ...providerFiles];
+
+    const files: TemplateFile[] = allRemoteFiles.map((file) => {
       let content = file.content;
       let filePath = file.path;
 
