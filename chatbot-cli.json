@@ -1,0 +1,6 @@
+{
+  "componentsPath": "src/components",
+  "hooksPath": "src/hooks",
+  "providersPath": "src/provider",
+  "typescript": true
+}

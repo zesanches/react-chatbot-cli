@@ -6,11 +6,15 @@ import ora from 'ora';
 
 interface Config {
   componentsPath: string;
+  hooksPath: string;
+  providersPath: string;
   typescript: boolean;
 }
 
 const DEFAULT_CONFIG: Config = {
   componentsPath: 'src/components',
+  hooksPath: 'src/hooks',
+  providersPath: 'src/provider',
   typescript: true,
 };
 
@@ -57,6 +61,18 @@ export async function init() {
       initial: DEFAULT_CONFIG.componentsPath,
     },
     {
+      type: 'text',
+      name: 'hooksPath',
+      message: 'Where would you like to add hooks?',
+      initial: DEFAULT_CONFIG.hooksPath,
+    },
+    {
+      type: 'text',
+      name: 'providersPath',
+      message: 'Where would you like to add providers?',
+      initial: DEFAULT_CONFIG.providersPath,
+    },
+    {
       type: 'confirm',
       name: 'typescript',
       message: 'Use TypeScript?',
@@ -71,6 +87,8 @@ export async function init() {
 
   const config: Config = {
     componentsPath: response.componentsPath,
+    hooksPath: response.hooksPath,
+    providersPath: response.providersPath,
     typescript: response.typescript,
   };
 
